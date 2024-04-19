@@ -1,6 +1,8 @@
 using FluentBlazorEcommerce.Client.Pages;
 using Microsoft.FluentUI.AspNetCore.Components;
 using FluentBlazorEcommerce.Components;
+using FluentBlazorEcommerce.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddFluentUIComponents();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("sqlite");
+    options.UseSqlite(connectionString);
+});
 
 var app = builder.Build();
 
