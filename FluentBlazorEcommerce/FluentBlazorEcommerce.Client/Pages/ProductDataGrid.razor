@@ -1,0 +1,41 @@
+﻿@page "/productdatagrid"
+@using FluentBlazorEcommerce.Models
+@inject HttpClient http
+@inject NavigationManager Navigation
+
+<h3>ProductDataGrid</h3>
+
+// Everything below this line still needs reformatted
+
+<FluentButton OnClick="@(() => Navigation.NavigateTo($"/DemoNew"))">New Person</FluentButton>
+<FluentDataGrid Items="@people" AdditionalAttributes="@Attributes">
+    <PropertyColumn Property="@(p => p.PersonID)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Age)" Sortable="true" />
+    <TemplateColumn>
+        <FluentButton OnClick="@(() => Navigation.NavigateTo($"/DemoDetails/{context.PersonID}"))">Edit</FluentButton>
+        <FluentButton OnClick="@(() => DeletePerson(context.PersonID))">Delete</FluentButton>
+    </TemplateColumn>
+</FluentDataGrid>
+
+@code {
+    IQueryable<PersonViewModel> people { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        people = (await http.GetFromJsonAsync<List<PersonViewModel>>("/api/people")).AsQueryable();
+    }
+
+    Dictionary<string, object> Attributes { get; set; } = new()
+    {
+        {"width","100px" }
+    };
+
+    private async Task DeletePerson(int PersonID)
+    {
+        await http.DeleteAsync($"/api/people/{PersonID}");
+        people = (await http.GetFromJsonAsync<List<PersonViewModel>>("/api/people")).AsQueryable();
+    }
+
+}

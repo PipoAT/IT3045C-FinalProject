@@ -3,6 +3,8 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using FluentBlazorEcommerce.Components;
 using FluentBlazorEcommerce.Database;
 using Microsoft.EntityFrameworkCore;
+using FluentBlazorEcommerce.Models;
+using FluentBlazorEcommerce.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,5 +41,25 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(FluentBlazorEcommerce.Client._Imports).Assembly);
+
+app.MapGet("/api/products", async (AppDbContext dbContext) =>
+{
+    var products = await dbContext.Products.ToListAsync();
+
+    List<ProductViewModel> productViewModels = new();
+
+    foreach (var product in products)
+    {
+        productViewModels.Add(new ProductViewModel
+        {
+            ID = product.Id,
+            Name = product.Name,
+            Price = product.Price,
+            Description = product.Description
+        });
+    }
+
+    return Results.Ok(products);
+});
 
 app.Run();
