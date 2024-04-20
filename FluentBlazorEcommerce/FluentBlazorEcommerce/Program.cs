@@ -62,4 +62,35 @@ app.MapGet("/api/products", async (AppDbContext dbContext) =>
     return Results.Ok(products);
 });
 
+// fix below code to be in line with schema
+app.MapPost("/cart", async (Product product, AppDbContext dbContext) =>
+{
+    dbContext.ShoppingCarts.Add(product);
+    await dbContext.SaveChangesAsync();
+
+    return shoppingcartmod;
+});
+
+// fix below code to be in line with schema
+app.MapPut("/people/{personID}", async (int personID, Person person, AppDbContext dbContext) =>
+{
+    if (personID != person.PersonID)
+    {
+        return Results.BadRequest("Person ID mismatch");
+    }
+
+    dbContext.Entry(person).State = EntityState.Modified;
+    await dbContext.SaveChangesAsync();
+
+    return Results.NoContent();
+});
+
+// fix below code to be in line with schema
+app.MapDelete("/people/{personID}", async (int personID, AppDbContext dbContext) =>
+{
+    dbContext.People.Remove(new Person { PersonID = personID });
+    await dbContext.SaveChangesAsync();
+
+});
+
 app.Run();
