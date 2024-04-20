@@ -1,5 +1,5 @@
 ﻿@page "/productdatagrid"
-@using FluentBlazorEcommerce.Models
+@using FluentBlazorEcommerce.Entities
 @inject HttpClient http
 @inject NavigationManager Navigation
 
@@ -32,10 +32,16 @@
         {"width","100px" }
     };
 
+    private async Task RefreshData()
+    {
+        people = (await http.GetFromJsonAsync<List<PersonViewModel>>("/api/people")).AsQueryable();
+    }
+
     private async Task DeletePerson(int PersonID)
     {
         await http.DeleteAsync($"/api/people/{PersonID}");
-        people = (await http.GetFromJsonAsync<List<PersonViewModel>>("/api/people")).AsQueryable();
+        await RefreshData();
     }
+
 
 }
