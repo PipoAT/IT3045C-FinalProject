@@ -24,7 +24,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        people = (await http.GetFromJsonAsync<List<PersonViewModel>>("/api/people")).AsQueryable();
+        people = (await http.GetFromJsonAsync<List><<PersonViewModel>>("/api/people")).AsQueryable();
     }
 
     Dictionary<string, object> Attributes { get; set; } = new()

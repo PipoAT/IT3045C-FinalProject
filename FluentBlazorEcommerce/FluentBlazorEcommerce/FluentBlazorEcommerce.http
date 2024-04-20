@@ -1,0 +1,28 @@
+@WebApiHost = http://localhost:5555
+
+###
+GET {{WebApiHost}}/api/products
+###
+GET {{WebApiHost}}/api/products/1
+###
+POST {{WebApiHost}}/ShoppingCart
+Content-Type: application/json
+
+{
+    
+    "Id": 1,
+    "userId": 1
+}
+
+###
+PUT {{WebApiHost}}/Users/1
+Content-Type: application/json
+
+{
+    "Id": 1,
+    "Username": "TestUser",
+    "Email": "testuser@testuser.com"
+}
+
+###
+DELETE {{WebApiHost}}/Users/1
