@@ -1,0 +1,35 @@
+@MinimalApiHost = https://localhost:7025
+
+###
+
+# return all product records
+
+GET {{MinimalApiHost}}/api/products
+
+###
+GET {{MinimalApiHost}}/api/products/2
+
+###
+PUT {{MinimalApiHost}}/api/products/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Latest Smartphone",
+  "price": 599.99,
+  "description": "Latest smartphone with advanced features and high-resolution camera."
+}
+
+###
+POST {{MinimalApiHost}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Budget Laptop",
+  "price": 549.99,
+  "description": "Good laptop with medium-powered graphics card."
+}
+
+
+###
+DELETE {{MinimalApiHost}}/api/products/9

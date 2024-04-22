@@ -1,0 +1,35 @@
+﻿@page "/Products"
+@using FluentBlazorEcommerce.Models
+@inject HttpClient http
+@inject NavigationManager Navigation
+
+<h1>Products</h1>
+
+<FluentButton OnClick="@(() => Navigation.NavigateTo($"/ProductNew"))">New Product</FluentButton>
+
+<FluentDataGrid Id="productgrid" Items="@products">
+    <PropertyColumn Property="@(c => c.Id)" Sortable="true" />
+    <PropertyColumn Property="@(c => c.Name)" Sortable="true" />
+    <PropertyColumn Property="@(c => c.Price)" Sortable="true" />
+    <PropertyColumn Property="@(c => c.Description)" Sortable="true" />
+    <TemplateColumn>
+           <FluentButton OnClick="@(() => Navigation.NavigateTo($"/ProductDetails/{context.Id}"))">Edit</FluentButton>
+           <FluentButton OnClick="@(() => DeleteProduct(context.Id))">Delete</FluentButton>
+    </TemplateColumn>
+</FluentDataGrid>
+
+@code {
+    IQueryable<ProductViewModel> products { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        products = (await http.GetFromJsonAsync<List<ProductViewModel>>("/api/products")).AsQueryable();
+    }
+
+    private async Task DeleteProduct(int Id)
+    {
+        await http.DeleteAsync($"/api/products/{Id}");
+        products = (await http.GetFromJsonAsync<List<ProductViewModel>>("/api/products")).AsQueryable();
+    }
+}

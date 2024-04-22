@@ -1,0 +1,25 @@
+﻿@page "/Checkout"
+
+@using FluentBlazorEcommerce.Models
+@inject HttpClient http
+
+<h1>Checkout - Your Selected Items</h1>
+
+<FluentDataGrid Id="productgrid" Items="@checkout">
+    <PropertyColumn Property="@(c => c.Id)" />
+    <PropertyColumn Property="@(c => c.Name)" />
+    <PropertyColumn Property="@(c => c.Price)" />
+    <PropertyColumn Property="@(c => c.Description)" />
+</FluentDataGrid>
+
+@code {
+    IQueryable<ProductViewModel> checkout { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        checkout = (await http.GetFromJsonAsync<List<ProductViewModel>>("/api/products/2")).AsQueryable();
+    }
+
+}
+

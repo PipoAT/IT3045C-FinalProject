@@ -1,0 +1,32 @@
+﻿@page "/ProductNew"
+@using FluentBlazorEcommerce.Models
+@inject HttpClient http
+@inject NavigationManager Navigation
+
+<h3>ProductNew</h3>
+
+<EditForm Model="@product" OnValidSubmit="HandleValidSubmit" FormName="ProductForm">
+    <FluentStack Orientation="Orientation.Vertical">
+        <FluentTextField @bind-Value="product.Name" Label="Name" />
+        <FluentNumberField @bind-Value="product.Price" Label="Price" TValue="decimal" />
+        <FluentTextField @bind-Value="product.Description" Label="Description" />
+        <FluentStack Orientation="Orientation.Horizontal">
+            <FluentButton Type="ButtonType.Submit">Save</FluentButton>
+            <FluentButton OnClick="@(() => Navigation.NavigateTo("/Products"))">Cancel</FluentButton>
+        </FluentStack>
+    </FluentStack>
+</EditForm>
+
+@code {
+    @code {
+
+        [SupplyParameterFromForm]
+        public ProductViewModel product { get; set; } = new();
+
+        private async Task HandleValidSubmit()
+        {
+            await http.PostAsJsonAsync($"/api/products", product);
+        }
+    }
+
+}
